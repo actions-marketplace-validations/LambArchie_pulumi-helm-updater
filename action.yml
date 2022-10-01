@@ -1,11 +1,10 @@
-name: 'Your name here'
-description: 'Provide a description here'
-author: 'Your name or organization here'
+name: 'Pulumi Helm Updater'
+description: 'Determine if a update to a pulumi managed helm chart is available'
+author: 'LambArchie'
 inputs:
-  milliseconds: # change this
+  stack_name: # change this
     required: true
-    description: 'input description here'
-    default: 'default value if applicable'
+    description: 'Pulumi Stack to Check'
 runs:
   using: 'node16'
   main: 'dist/index.js'
