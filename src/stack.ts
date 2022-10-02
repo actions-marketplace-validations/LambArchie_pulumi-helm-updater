@@ -18,8 +18,8 @@ export const getStack = (stackName: string, stackFile: string) => {
     }
 
     if (commandOutput.stderr) {
-      core.warning('The following warning occured on the stack export')
-      core.warning(commandOutput.stderr)
+      core.warning(`The following warning occured on the stack export
+${commandOutput.stderr}`)
     }
 
     output = commandOutput.stdout
