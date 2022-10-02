@@ -38,7 +38,7 @@ jobs:
       - name: Build + Package
         shell: bash
         run: |-
-          npm run build:build
+          npm run package:build
 
       - name: Test
         shell: bash
@@ -63,7 +63,7 @@ jobs:
           stack_name: dev
           stack_location: example
           write_format: js
-          write_file: example/helmVersions.ts
+          write_location: example/helmVersions.ts
 
       - name: Check file was updated correctly
         shell: bash

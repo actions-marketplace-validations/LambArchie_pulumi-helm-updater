@@ -36,7 +36,7 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.checkHelmUpdates = exports.parseHelmRepoIndex = void 0;
 const core = __importStar(__nccwpck_require__(2186));
 const axios_1 = __importDefault(__nccwpck_require__(6545));
-const js_yaml_1 = __importDefault(__nccwpck_require__(1917));
+const js_yaml_1 = __nccwpck_require__(1917);
 const semver_1 = __nccwpck_require__(1383);
 const parseHelmRepoIndex = (currentRelease, repoIndex) => {
     const { chart } = currentRelease;
@@ -45,6 +45,8 @@ const parseHelmRepoIndex = (currentRelease, repoIndex) => {
         core.error(`Could not parse the current chart version for ${chart}, not checking for updates`);
         return {
             chart,
+            currentVersion: currentRelease.version,
+            error: true,
             latestVersion: currentRelease.version,
         };
     }
@@ -72,6 +74,8 @@ const parseHelmRepoIndex = (currentRelease, repoIndex) => {
     }
     return {
         chart,
+        currentVersion,
+        error: false,
         latestVersion,
     };
 };
@@ -82,7 +86,7 @@ const checkHelmUpdates = async (currentHelmRelease) => {
     try {
         const request = await axios_1.default.get(chartUrl);
         core.debug(`Parsing ${chartUrl}`);
-        const chartYaml = js_yaml_1.default.load(request.data);
+        const chartYaml = (0, js_yaml_1.load)(request.data);
         return (0, exports.parseHelmRepoIndex)(currentHelmRelease, chartYaml);
     }
     catch (err) {
@@ -94,7 +98,7 @@ const checkHelmUpdates = async (currentHelmRelease) => {
             core.debug(err.request);
             core.debug(err.message);
         }
-        else if (err instanceof js_yaml_1.default.YAMLException) {
+        else if (err instanceof js_yaml_1.YAMLException) {
             core.error(`Failed to parse the download helm repo index from ${currentHelmRelease.repo} for ${currentHelmRelease.chart}`);
         }
         else {
@@ -104,6 +108,8 @@ const checkHelmUpdates = async (currentHelmRelease) => {
     core.error(`Failed to download or parse the repo index from ${currentHelmRelease.repo} for ${currentHelmRelease.chart} so skipping update checking for chart`);
     return {
         chart: currentHelmRelease.chart,
+        currentVersion: currentHelmRelease.version,
+        error: true,
         latestVersion: currentHelmRelease.version,
     };
 };
@@ -147,11 +153,26 @@ const stack_1 = __nccwpck_require__(9675);
 const write_1 = __nccwpck_require__(632);
 const run = async () => {
     try {
-        const stackName = core.getInput('stack_name', { required: true });
-        core.debug(`Using pulumi stack ${stackName}`);
-        const pulumiStack = (0, stack_1.getStack)(stackName);
+        const stackName = core.getInput('stack_name', { required: false });
+        const stackFile = core.getInput('stack_file', { required: false });
+        if (stackName && stackFile) {
+            core.setFailed('Both stack_name and stack_file were set, quitting');
+            process.exit();
+        }
+        else if (stackName) {
+            core.info(`Using pulumi stack ${stackName}`);
+        }
+        else if (stackFile) {
+            core.info(`Using already exported pulumi stack in file ${stackFile}`);
+        }
+        else {
+            core.setFailed('Neither stack_name or stack_file were set, quitting');
+            process.exit();
+        }
+        const pulumiStack = (0, stack_1.getStack)(stackName, stackFile);
         const currentHelmReleases = (0, stack_1.parseStack)(pulumiStack);
         Promise.all(currentHelmReleases.map(release => (0, helm_1.checkHelmUpdates)(release))).then((releases) => {
+            core.setOutput('latest_versions', JSON.stringify(releases));
             const writeFormat = core.getInput('write_format', { required: false });
             const writeLocation = core.getInput('write_location', { required: false });
             switch (writeFormat) {
@@ -208,20 +229,40 @@ var __importStar = (this && this.__importStar) || function (mod) {
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.parseStack = exports.getStack = void 0;
 const child_process_1 = __nccwpck_require__(2081);
+const fs_1 = __nccwpck_require__(7147);
 const core = __importStar(__nccwpck_require__(2186));
-const getStack = (stackName) => {
-    const commandOutput = (0, child_process_1.spawnSync)('pulumi', ['stack', 'export', '--stack', stackName], { encoding: 'utf-8', shell: true });
-    if (commandOutput.status !== 0) {
-        core.error(`Failed to export the pulumi stack ${stackName}`);
-        core.setFailed(commandOutput.stderr);
-        process.exit();
+const getStack = (stackName, stackFile) => {
+    let output;
+    if (stackName) {
+        const stackLocation = core.getInput('stack_location', { required: false });
+        core.debug(`Stack location was set to ${stackLocation}`);
+        const cwd = stackLocation || undefined;
+        const commandOutput = (0, child_process_1.spawnSync)('pulumi', ['stack', 'export', '--stack', stackName], { cwd, encoding: 'utf-8', shell: true });
+        if (commandOutput.status !== 0) {
+            core.error(`Failed to export the pulumi stack ${stackName}`);
+            core.setFailed(commandOutput.stderr);
+            process.exit();
+        }
+        if (commandOutput.stderr) {
+            core.warning('The following warning occured on the stack export');
+            core.warning(commandOutput.stderr);
+        }
+        output = commandOutput.stdout;
     }
-    if (commandOutput.stderr) {
-        core.warning('The following warning occured on the stack export');
-        core.warning(commandOutput.stderr);
+    else {
+        if (!(0, fs_1.existsSync)(stackFile)) {
+            core.setFailed(`Failed to read from file ${stackFile}, therefore quitting as cannot read pulumi stack export`);
+            process.exit();
+        }
+        output = (0, fs_1.readFileSync)(stackFile, 'utf-8');
     }
     try {
-        const stack = JSON.parse(commandOutput.stdout);
+        const stack = JSON.parse(output);
+        if (stackFile) {
+            return {
+                deployment: stack.checkpoint.latest,
+            };
+        }
         return stack;
     }
     catch (err) {
@@ -236,6 +277,8 @@ exports.getStack = getStack;
 const parseStack = (pulumiStack) => {
     const helmReleases = [];
     pulumiStack.deployment.resources.forEach((resource) => {
+        // Currently don't support kubernetes:helm.sh/v3:Chart as couldn't find a repliable way
+        // to get the current version
         if (resource.type === 'kubernetes:helm.sh/v3:Release') {
             core.debug(`Matched resource which has a URN of ${resource.urn}`);
             const releaseInfo = {
@@ -298,20 +341,26 @@ const writeAsJS = (updates, location) => {
     const fileData = (0, fs_1.readFileSync)(location, 'utf-8');
     Promise.all(fileData.split('\n').map((line, lineNum) => {
         const lineSplit = line.split(' ');
-        // export const chartName = '1.2.3'
-        if (lineSplit.length === 5 && lineSplit[0] === 'export' && lineSplit[1] === 'const' && lineSplit[3] === '=') {
+        // export const chartNameVersion = '1.2.3'
+        if (lineSplit.length >= 5 && lineSplit[0] === 'export' && lineSplit[1] === 'const' && lineSplit[3] === '=') {
             const lineChart = lineSplit[2];
             const updateFailure = updates.every((update) => {
-                // JS variables can't use - so making camelCase (as linters prefer)
-                if (toCamelCase(update.chart) === lineChart) {
-                    lineSplit[4] = `'${update.latestVersion}'`;
-                    core.debug(`Updated line for chart ${lineChart} to version ${update.latestVersion}`);
+                // JS variables can't use - so making camelCase + add Version after for better imports
+                if (`${toCamelCase(update.chart)}Version` === lineChart) {
+                    const versionUpdate = `'${update.latestVersion}'`;
+                    if (versionUpdate === lineSplit[4]) {
+                        core.debug(`Chart ${lineChart} is already on latest version ${update.latestVersion}`);
+                    }
+                    else {
+                        lineSplit[4] = versionUpdate;
+                        core.debug(`Updated line for chart ${lineChart} to version ${update.latestVersion}`);
+                    }
                     return false;
                 }
                 return true;
             });
             if (updateFailure) {
-                core.info(`Did not find release ${lineChart} in this pulumi stack so did not check for updates`);
+                core.info(`Did not find release ${lineChart} in this pulumi stack so did not check it for updates`);
                 return line;
             }
         }
