@@ -25,6 +25,12 @@ jobs:
           node-version: ${{ matrix.node }}
           cache: 'npm'
 
+      - name: Upgrade npm
+        if: matrix.node == '14'
+        shell: bash
+        run: |-
+          npm install -g npm@latest
+
       - name: Install Dependencies
         shell: bash
         run: |-
