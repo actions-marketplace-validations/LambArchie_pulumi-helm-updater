@@ -2,12 +2,16 @@ name: 'Pulumi Helm Updater'
 description: 'Determine if a update to a pulumi managed helm chart is available'
 author: 'LambArchie'
 inputs:
-  stack_name:
-    required: false
-    description: 'Pulumi Stack to Check. Require this or stack_path to be set'
   stack_file:
     required: false
     description: 'Pulumi Stack export file to check. Require this or stack_name to be set'
+  stack_name:
+    required: false
+    description: 'Pulumi Stack to Check. Require this or stack_path to be set'
+  stack_location:
+    required: false
+    description: 'If stack_name is set but the Pulumi.stack.yaml file is not repo root, set this to the folder it is contained in'
+    default: ''
   write_format:
     required: false
     default: none

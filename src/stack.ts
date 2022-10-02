@@ -6,7 +6,11 @@ import { HelmRelease, PulumiStack } from './types'
 export const getStack = (stackName: string, stackFile: string) => {
   let output: string
   if (stackName) {
-    const commandOutput = spawnSync('pulumi', ['stack', 'export', '--stack', stackName], { encoding: 'utf-8', shell: true })
+    const stackLocation = core.getInput('stack_location', { required: false })
+    core.debug(`Stack location was set to ${stackLocation}`)
+    const cwd = stackLocation || undefined
+
+    const commandOutput = spawnSync('pulumi', ['stack', 'export', '--stack', stackName], { cwd, encoding: 'utf-8', shell: true })
     if (commandOutput.status !== 0) {
       core.error(`Failed to export the pulumi stack ${stackName}`)
       core.setFailed(commandOutput.stderr)

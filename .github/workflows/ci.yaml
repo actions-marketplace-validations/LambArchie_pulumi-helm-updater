@@ -51,7 +51,21 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
 
-      - uses: ./
+      - name: Set pulumi config passphrase
+        working-directory: example
+        shell: bash
+        run: |-
+          echo "PULUMI_CONFIG_PASSPHRASE=" >> $GITHUB_ENV
+
+      - name: Run Pulumi Helm Updater
+        uses: ./
         with:
-          stack_name: a
-          write_format: none
+          stack_name: dev
+          stack_location: example
+          write_format: js
+          write_file: example/helmVersions.ts
+
+      - name: Check file was updated correctly
+        shell: bash
+        run: |-
+          echo "9e93bb7b61bb400ce30e7be841cefda39862f88e20873e1ca82048c751bba015 example/helmVersions.ts" | sha256sum --check --status || exit 1
