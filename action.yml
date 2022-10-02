@@ -26,6 +26,9 @@ inputs:
 outputs:
   latest_versions:
     description: Latest version of all the helm releases in this stack
+branding:
+  icon: 'anchor'
+  color: 'purple'
 runs:
   using: 'node16'
   main: 'dist/index.js'
