@@ -10,7 +10,7 @@ charset = utf-8
 trim_trailing_whitespace = true
 insert_final_newline = true
 
-[*.{js,ts,json,yaml}]
+[*.{js,ts,json,yaml,md}]
 indent_size = 2
 
 [*.{md,mdx}]

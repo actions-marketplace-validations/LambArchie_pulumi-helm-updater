@@ -70,7 +70,7 @@ jobs:
         uses: ./
         with:
           stack_name: dev
-          stack_location: example
+          stack_location: example/
           write_format: js
           write_location: example/helmVersions.ts
 
