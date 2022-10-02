@@ -9,7 +9,7 @@
   "parser": "@typescript-eslint/parser",
   "parserOptions": {
     "ecmaVersion": 2021,
-    "project": ["./tsconfig.json"]
+    "project": ["./tsconfig.json", "example/tsconfig.json"]
   },
   "plugins": ["@typescript-eslint"],
   "rules": {
