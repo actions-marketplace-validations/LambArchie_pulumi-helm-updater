@@ -1,16 +1,42 @@
 import * as core from '@actions/core'
-import { wait } from './wait'
+import { checkHelmUpdates } from './helm'
+import { getStack, parseStack } from './stack'
+import { writeAsJS } from './write'
 
-async function run(): Promise<void> {
+const run = async () => {
   try {
-    const ms: string = core.getInput('milliseconds')
-    core.debug(`Waiting ${ms} milliseconds ...`) // debug is only output if you set the secret `ACTIONS_STEP_DEBUG` to true
+    const stackName = core.getInput('stack_name', { required: false })
+    const stackFile = core.getInput('stack_file', { required: false })
+    if (stackName && stackFile) {
+      core.setFailed('Both stack_name and stack_file were set, quitting')
+      process.exit()
+    } else if (stackName) {
+      core.info(`Using pulumi stack ${stackName}`)
+    } else if (stackFile) {
+      core.info(`Using already exported pulumi stack in file ${stackFile}`)
+    } else {
+      core.setFailed('Neither stack_name or stack_file were set, quitting')
+      process.exit()
+    }
 
-    core.debug(new Date().toTimeString())
-    await wait(parseInt(ms, 10))
-    core.debug(new Date().toTimeString())
+    const pulumiStack = getStack(stackName, stackFile)
+    const currentHelmReleases = parseStack(pulumiStack)
 
-    core.setOutput('time', new Date().toTimeString())
+    Promise.all(currentHelmReleases.map(release => checkHelmUpdates(release))).then((releases) => {
+      core.setOutput('latest_versions', JSON.stringify(releases))
+
+      const writeFormat = core.getInput('write_format', { required: false })
+      const writeLocation = core.getInput('write_location', { required: false })
+
+      switch (writeFormat) {
+        case 'js':
+          writeAsJS(releases, writeLocation); break
+        case 'none':
+          core.info('Not writting to disk as format is none'); break
+        default:
+          core.warning(`Unrecognised option for write_format ${writeFormat}`); break
+      }
+    })
   } catch (error) {
     if (error instanceof Error) core.setFailed(error.message)
   }

@@ -2,9 +2,26 @@ name: 'Pulumi Helm Updater'
 description: 'Determine if a update to a pulumi managed helm chart is available'
 author: 'LambArchie'
 inputs:
-  stack_name: # change this
-    required: true
-    description: 'Pulumi Stack to Check'
+  stack_name:
+    required: false
+    description: 'Pulumi Stack to Check. Require this or stack_path to be set'
+  stack_file:
+    required: false
+    description: 'Pulumi Stack export file to check. Require this or stack_name to be set'
+  write_format:
+    required: false
+    default: none
+    description: |
+      Should the output be written to disk and if so in what format:
+        'none' - Don't write anything to disk
+        'js'   - Write as a javascript constant file
+  write_location:
+    required: false
+    default: out.txt
+    description: 'What location should the output be written to'
+outputs:
+  latest_versions:
+    description: Latest version of all the helm releases in this stack
 runs:
   using: 'node16'
   main: 'dist/index.js'

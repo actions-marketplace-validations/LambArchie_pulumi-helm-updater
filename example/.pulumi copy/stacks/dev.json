@@ -1,0 +1,345 @@
+{
+    "version": 3,
+    "checkpoint": {
+        "stack": "dev",
+        "latest": {
+            "manifest": {
+                "time": "2022-10-02T15:03:40.660693915+01:00",
+                "magic": "655e2609c7d5954d4be4d2f70adb43903fe4303d1a710e7ca191b32c5eac92c9",
+                "version": "v3.40.1"
+            },
+            "secrets_providers": {
+                "type": "passphrase",
+                "state": {
+                    "salt": "v1:S2G6pbjVz4Q=:v1:8cuQL6SG79TD4IRO:PjQQOFZ+GjTrR28tzydzPUpQ5Ua+Yw=="
+                }
+            },
+            "resources": [
+                {
+                    "urn": "urn:pulumi:dev::example-typescript::pulumi:pulumi:Stack::example-typescript-dev",
+                    "custom": false,
+                    "type": "pulumi:pulumi:Stack"
+                },
+                {
+                    "urn": "urn:pulumi:dev::example-typescript::pulumi:providers:kubernetes::default_3_21_4",
+                    "custom": true,
+                    "id": "5ed17955-7ad7-4413-ac03-c49879ec69dd",
+                    "type": "pulumi:providers:kubernetes",
+                    "inputs": {
+                        "version": "3.21.4"
+                    },
+                    "outputs": {
+                        "version": "3.21.4"
+                    },
+                    "parent": "urn:pulumi:dev::example-typescript::pulumi:pulumi:Stack::example-typescript-dev"
+                },
+                {
+                    "urn": "urn:pulumi:dev::example-typescript::kubernetes:helm.sh/v3:Release::argo-cd-notifications",
+                    "custom": true,
+                    "id": "argocd/argocd-notifications",
+                    "type": "kubernetes:helm.sh/v3:Release",
+                    "inputs": {
+                        "atomic": false,
+                        "chart": "argocd-notifications",
+                        "cleanupOnFail": false,
+                        "createNamespace": true,
+                        "dependencyUpdate": false,
+                        "description": "",
+                        "devel": false,
+                        "disableCRDHooks": false,
+                        "disableOpenapiValidation": false,
+                        "disableWebhooks": false,
+                        "forceUpdate": false,
+                        "keyring": "",
+                        "lint": false,
+                        "name": "argocd-notifications",
+                        "namespace": "argocd",
+                        "postrender": "",
+                        "recreatePods": false,
+                        "renderSubchartNotes": false,
+                        "replace": false,
+                        "repositoryOpts": {
+                            "caFile": "",
+                            "certFile": "",
+                            "keyFile": "",
+                            "password": "",
+                            "repo": "https://argoproj.github.io/argo-helm",
+                            "username": ""
+                        },
+                        "resetValues": false,
+                        "resourceNames": {
+                            "ConfigMap/v1": [
+                                "argocd-notifications-cm"
+                            ],
+                            "Deployment.apps/apps/v1": [
+                                "argocd-notifications-controller"
+                            ],
+                            "Role.rbac.authorization.k8s.io/rbac.authorization.k8s.io/v1": [
+                                "argocd-notifications-controller"
+                            ],
+                            "RoleBinding.rbac.authorization.k8s.io/rbac.authorization.k8s.io/v1": [
+                                "argocd-notifications-controller"
+                            ],
+                            "Secret/v1": [
+                                "argocd-notifications-secret"
+                            ],
+                            "ServiceAccount/v1": [
+                                "argocd-notifications-bot",
+                                "argocd-notifications-controller"
+                            ]
+                        },
+                        "reuseValues": false,
+                        "skipAwait": false,
+                        "skipCrds": false,
+                        "timeout": 300,
+                        "values": {},
+                        "verify": false,
+                        "version": "1.8.0",
+                        "waitForJobs": false
+                    },
+                    "outputs": {
+                        "__inputs": {
+                            "4dabf18193072939515e22adb298388d": "1b47061264138c4ac30d75fd1eb44270",
+                            "ciphertext": "v1:+WZIvNyQKwZRsLk6:G5ams6yQ6ID8g9Z63VwTEvuml6NVBIolFhTn16c8aurm/EghpKueBnQ+FTzmDiprGOXrL/TBcjBpStgPbbYGWlFdOFPVOlXgD/lDEkwSJgaMMBinhFg7sfLRFrvlImkohU9NXtsK7lBpAS6XttHj0AdgBFCGuzcoIwRXce8x7tQEedRM3Mh+eIyFq6OOAXCsk5hewNu/gx4tAeAu/Lls14iMCcOi8n1FOCFNoDQ6j1wkSCoEmnaa2V2U8Wa9sSfil8E8M9l4YpHnGkScGgVg8KnMle1Y6PPiC6GB7vAB6lpmgCklguD+yKzcfjYNsStCcqRCceZpnnuS3P9sg24s9ja0jfhVL+aWOl/ONWi2EnQDWz/4Fd/Ey0inB1GWbcADn8L2TfdU9NjBtKwxLDBhdm2hdhTe2IcXx2TO2z6xea0iUynQ2UphDZG2Ed7RS0tbWUVLPHaeM5peH7K4Dbt6Ku7mnJ/mAbYIRrnephfeWBaFLkqsHWrhgYt1gBeDRWOIWttakSbADD0kRmSp2OX0U88ob/tA+jRM+EVsyTFLjV90p1lqoVV3/L8GPobl0biJXyEdVs/5HDUPB3B/64Vj/fk07+PrDUZMM5vhIFki6KqlZYsd00p0ED4utBs1PqmtvLa2FqJWNPz6vEAO3phqBlAVD7jHx3EOACmXdROlT6Y/RsWmqcJOnWzbxch1e2McdBfAoEt1JfUmnQBt6JfD5BBrAv/Zm1OnXWRc/wf1crKodfN5NlRUb3ilsdh63f3FmKi8ZtCIKL/dVSDgjAD+LeSgYTVpwL4kwdKawK0CCvQS/3zwiC4LL8xIBTYR3Bri30p/v4jPPORC+wa/rBvZ2WyXUMZkfe++FexYXeBqGT0zyCMpd4/X3yhBcBp/1/Z2+p/x/Qv3FWJcFwMFTEsGYJwIB4gh4QMmfWYs3FbmW+5C50AgdN1+jSvPrjKb8gqaGxz/ZC3w1hGkzL6YCRe5FIrgLgbMb3ZMIpLHpdyDAAUMiHotAoXdqtf8Pc1e6y1zjL5CPF5MDYx2XLlgXjCmHTWoVwT1QKQRDPfD4+0N69amMEROpxVrs3GfxzV4e3M388bSbFvPQXkGnBdZYC/4xv7VgOzP19hY3CFqma/C0of6FRobyRO5xnRStPDFGIGvaMYxToE3Q+QUoKdeIXf/5F6O9YNbtefg9mysDSFS2iYes4MpY0g/7eb9YUo7Hl3/P/R5Gd1Er3j8L9Th77YRWYhkaoPnfeCph5ayjsioz/N6L8jsirUQ57QwI7eILYDnIBtRGEajmxWk/xvnM3YXusmvjH6JuFwC5wCUiN9QD8GjQr3pbL3ukxc7IyRs3AgNy7G5mdakTJ3W+Z6NZijbdt5iI7aAdvKjGZQb1pZMF3w/5R1fubke3gP/3NxNo7Jls8YKACP6WVmdtCMY76IFPZ69FQP4hYNcYmQb0gK8pTwQH3KCOVv9bT6RCgiwStz7l5XTIhupUySdq9OFT2t49oGOTLaQGk+/LyEqWf443feYpYIaTt/NT7e1nCn2ASTPZ21CuntPrCn14A=="
+                        },
+                        "atomic": false,
+                        "chart": "argocd-notifications",
+                        "cleanupOnFail": false,
+                        "createNamespace": true,
+                        "dependencyUpdate": false,
+                        "description": "",
+                        "devel": false,
+                        "disableCRDHooks": false,
+                        "disableOpenapiValidation": false,
+                        "disableWebhooks": false,
+                        "forceUpdate": false,
+                        "keyring": "",
+                        "lint": false,
+                        "name": "argocd-notifications",
+                        "namespace": "argocd",
+                        "postrender": "",
+                        "recreatePods": false,
+                        "renderSubchartNotes": false,
+                        "replace": false,
+                        "repositoryOpts": {
+                            "caFile": "",
+                            "certFile": "",
+                            "keyFile": "",
+                            "password": "",
+                            "repo": "https://argoproj.github.io/argo-helm",
+                            "username": ""
+                        },
+                        "resetValues": false,
+                        "resourceNames": {
+                            "ConfigMap/v1": [
+                                "argocd-notifications-cm"
+                            ],
+                            "Deployment.apps/apps/v1": [
+                                "argocd-notifications-controller"
+                            ],
+                            "Role.rbac.authorization.k8s.io/rbac.authorization.k8s.io/v1": [
+                                "argocd-notifications-controller"
+                            ],
+                            "RoleBinding.rbac.authorization.k8s.io/rbac.authorization.k8s.io/v1": [
+                                "argocd-notifications-controller"
+                            ],
+                            "Secret/v1": [
+                                "argocd-notifications-secret"
+                            ],
+                            "ServiceAccount/v1": [
+                                "argocd-notifications-bot",
+                                "argocd-notifications-controller"
+                            ]
+                        },
+                        "reuseValues": false,
+                        "skipAwait": false,
+                        "skipCrds": false,
+                        "status": {
+                            "appVersion": "v1.2.1",
+                            "chart": "argocd-notifications",
+                            "name": "argocd-notifications",
+                            "namespace": "argocd",
+                            "revision": 1,
+                            "status": "deployed",
+                            "version": "1.8.0"
+                        },
+                        "timeout": 300,
+                        "values": {},
+                        "verify": false,
+                        "version": "1.8.0",
+                        "waitForJobs": false
+                    },
+                    "parent": "urn:pulumi:dev::example-typescript::pulumi:pulumi:Stack::example-typescript-dev",
+                    "provider": "urn:pulumi:dev::example-typescript::pulumi:providers:kubernetes::default_3_21_4::5ed17955-7ad7-4413-ac03-c49879ec69dd",
+                    "propertyDependencies": {
+                        "chart": null,
+                        "compat": null,
+                        "createNamespace": null,
+                        "name": null,
+                        "namespace": null,
+                        "repositoryOpts": null,
+                        "version": null
+                    }
+                },
+                {
+                    "urn": "urn:pulumi:dev::example-typescript::kubernetes:helm.sh/v3:Release::argo-cd-applicationset",
+                    "custom": true,
+                    "id": "argocd/argocd-applicationset",
+                    "type": "kubernetes:helm.sh/v3:Release",
+                    "inputs": {
+                        "atomic": false,
+                        "chart": "argocd-applicationset",
+                        "cleanupOnFail": false,
+                        "createNamespace": true,
+                        "dependencyUpdate": false,
+                        "description": "",
+                        "devel": false,
+                        "disableCRDHooks": false,
+                        "disableOpenapiValidation": false,
+                        "disableWebhooks": false,
+                        "forceUpdate": false,
+                        "keyring": "",
+                        "lint": false,
+                        "name": "argocd-applicationset",
+                        "namespace": "argocd",
+                        "postrender": "",
+                        "recreatePods": false,
+                        "renderSubchartNotes": false,
+                        "replace": false,
+                        "repositoryOpts": {
+                            "caFile": "",
+                            "certFile": "",
+                            "keyFile": "",
+                            "password": "",
+                            "repo": "https://argoproj.github.io/argo-helm",
+                            "username": ""
+                        },
+                        "resetValues": false,
+                        "resourceNames": {
+                            "CustomResourceDefinition.apiextensions.k8s.io/apiextensions.k8s.io/v1": [
+                                "applicationsets.argoproj.io"
+                            ],
+                            "Deployment.apps/apps/v1": [
+                                "argocd-applicationset"
+                            ],
+                            "Role.rbac.authorization.k8s.io/rbac.authorization.k8s.io/v1": [
+                                "argocd-applicationset"
+                            ],
+                            "RoleBinding.rbac.authorization.k8s.io/rbac.authorization.k8s.io/v1": [
+                                "argocd-applicationset"
+                            ],
+                            "Service/v1": [
+                                "argocd-applicationset"
+                            ],
+                            "ServiceAccount/v1": [
+                                "argocd-applicationset"
+                            ]
+                        },
+                        "reuseValues": false,
+                        "skipAwait": false,
+                        "skipCrds": false,
+                        "timeout": 300,
+                        "values": {
+                            "mountGPGKeysVolume": false,
+                            "mountSSHKnownHostsVolume": false,
+                            "mountTLSCertsVolume": false,
+                            "rbac": {
+                                "pspEnabled": false
+                            }
+                        },
+                        "verify": false,
+                        "version": "1.12.1",
+                        "waitForJobs": false
+                    },
+                    "outputs": {
+                        "__inputs": {
+                            "4dabf18193072939515e22adb298388d": "1b47061264138c4ac30d75fd1eb44270",
+                            "ciphertext": "v1:MaK8e8zzl9EYzsKI:Lr74oim9CVLS7/F3/OtxLqtw4YrYb8ebmcfWl6oXY+Hj5EfABAbcpAUacMhFiC+n0fkEMTpVZofKRnok7CjVkMmLRSyVS+rqBqe+TCLK36y1cxOFY/WQLClcvP1rD7ieJD10NuPkFTJPCEhHVbAc74cTSuGlyUZT2YZQ4Uq6U7r5mUbwfayhnLAxcQKj1YbFsm8rkS7Af/NsG50NFQ1MJmXKje2dno27uNbBKYi8hAxM2ZaHUt7DYK9R7v7g1JIHFAiXMEc3tfiMpQEW9MVQMTKTSM+xSepjynNSw/rjnDNWQFBxQIXCwI2QW1bJhuF8ZUgnbxwc+jOJJyw4RGzCaH86bPCKETSdVeigKtLJ9kDrvS1LGG/pwVJ4ulEwhr6VdwOTCmb9XuHv5uKXmTiI/Vb48Xjrbhk7AY9pRD6Fcixp/Z3QrHe8wN3QvsEaEASTRnXk9UcHBnz7+cbUqKkwWX0BeRrh2f7IA1d01yT0EzF7NxXCF5jAkB/l85kzo6IfkCEaDmHDSjZWSMTLvCGpQTqifMfbLo+9rjZVsUVCUqPpmishwgieSN9VDAvZW7r1tMdz+inu2zz8h53dR5kF94gsEDUvtJHHJphK1NPlq482vx6wFbzn8gfjgpN8Vx29NxosTWrtsfmNUAQb7iX7Fyax5YtBEXJlaHWu2g+hX4pxv+ApbQpTO19hlqM2NLYq9uorctxUcYvuRoCoAdWJyLYuHaME7IskRTayMiUr3xYNxt0oRKFYW7jgI8E81j+DAwl36Wo2H8NgoMgGs9iD5NM0EBIBh9A/LVyIm24wGDEbz1CfSfWQauoNcFccs2nn63lVHvmQyny1RdbU3KSnHf1liypkMp0Plg9FWfS1y4jxd0cP+Apx9iQaV5I5hJysPWWlkH9K/3XAg6ZRgEV4emhlcLewTUQJJ/B+85+obTZ/SiNcEujXxHGFgHTUPGSe9l5dIYwb7BT2ZTK2f+VQZ+KNkwLjCBAw+LkNAT1U5rF85wlNKb/TbJlq/DvVgmweucXL1hB5qUjZYoxitO9LETx4HjbghsTDwxYniMynktvBvGG0lHnhoIlRstwON5UnyUfv4PPlyN20NqJ5qpzyAxlT1qElUQb5EjT71uKH4fb3GmVpxpn5Zydys01bp8P1b+zlwonAlvibbhf951MNSNLcmjzpFU/N69WHava8GZ5Hl7Ud2uDzEB3VpWfHvCdtC4N8pANFvc499gy8UD4EEvZlGoMY/S7ENpDKGqU8OJL2l0WhhF9NNNZfVntdykft2AdIMza74WpTC8dqr7Fasgabe+ItdbnECjvHNcIboOxACCrJaLYImYyNaI68xNhfhrtlUvszbRpVpFsWs/BQZvG8bUpfIroGt7I+0Bm6T0k/bMEFnX20BpBzFYtrvHhYu9k6XTiTNp6uWpRuXqciGBv7Z4PTSTFLl7zt6QXXhCeKfoqI5FM+6YU7sEoXr7ek06viISY5oKLc1jtn0faoy+9vTFhhKF4pxKQrXTf7KO67Fh+55AXxL1rGnGB5NHAp9plOJEY7dHTD63ImGi9jUv/YsgcRnUp2rLLPNUG2GyeWyKzsxxA/POmyfGMreiCVQEbzdisJ5ipnMWQfIJfPNey5Qji9j18yoPu2MEKiaQILyJPT9DFtVxZaotTVJ5WLEPLICaaNOhJsXBquvWv3syyiBXKa"
+                        },
+                        "atomic": false,
+                        "chart": "argocd-applicationset",
+                        "cleanupOnFail": false,
+                        "createNamespace": true,
+                        "dependencyUpdate": false,
+                        "description": "",
+                        "devel": false,
+                        "disableCRDHooks": false,
+                        "disableOpenapiValidation": false,
+                        "disableWebhooks": false,
+                        "forceUpdate": false,
+                        "keyring": "",
+                        "lint": false,
+                        "name": "argocd-applicationset",
+                        "namespace": "argocd",
+                        "postrender": "",
+                        "recreatePods": false,
+                        "renderSubchartNotes": false,
+                        "replace": false,
+                        "repositoryOpts": {
+                            "caFile": "",
+                            "certFile": "",
+                            "keyFile": "",
+                            "password": "",
+                            "repo": "https://argoproj.github.io/argo-helm",
+                            "username": ""
+                        },
+                        "resetValues": false,
+                        "resourceNames": {
+                            "Deployment.apps/apps/v1": [
+                                "argocd-applicationset"
+                            ],
+                            "Role.rbac.authorization.k8s.io/rbac.authorization.k8s.io/v1": [
+                                "argocd-applicationset"
+                            ],
+                            "RoleBinding.rbac.authorization.k8s.io/rbac.authorization.k8s.io/v1": [
+                                "argocd-applicationset"
+                            ],
+                            "Service/v1": [
+                                "argocd-applicationset"
+                            ],
+                            "ServiceAccount/v1": [
+                                "argocd-applicationset"
+                            ]
+                        },
+                        "reuseValues": false,
+                        "skipAwait": false,
+                        "skipCrds": false,
+                        "status": {
+                            "appVersion": "v0.4.1",
+                            "chart": "argocd-applicationset",
+                            "name": "argocd-applicationset",
+                            "namespace": "argocd",
+                            "revision": 1,
+                            "status": "deployed",
+                            "version": "1.12.1"
+                        },
+                        "timeout": 300,
+                        "values": {
+                            "mountGPGKeysVolume": false,
+                            "mountSSHKnownHostsVolume": false,
+                            "mountTLSCertsVolume": false,
+                            "rbac": {
+                                "pspEnabled": false
+                            }
+                        },
+                        "verify": false,
+                        "version": "1.12.1",
+                        "waitForJobs": false
+                    },
+                    "parent": "urn:pulumi:dev::example-typescript::pulumi:pulumi:Stack::example-typescript-dev",
+                    "provider": "urn:pulumi:dev::example-typescript::pulumi:providers:kubernetes::default_3_21_4::5ed17955-7ad7-4413-ac03-c49879ec69dd",
+                    "propertyDependencies": {
+                        "chart": null,
+                        "compat": null,
+                        "createNamespace": null,
+                        "name": null,
+                        "namespace": null,
+                        "repositoryOpts": null,
+                        "values": null,
+                        "version": null
+                    }
+                }
+            ]
+        }
+    }
+}

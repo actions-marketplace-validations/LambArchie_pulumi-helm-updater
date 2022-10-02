@@ -6,6 +6,9 @@ on:
       - "main"
   pull_request:
 
+permissions:
+  contents: read
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -22,27 +25,33 @@ jobs:
           node-version: ${{ matrix.node }}
           cache: 'npm'
 
-      - name: Install
+      - name: Install Dependencies
         shell: bash
         run: |-
           npm ci
-
-      - name: Build
-        shell: bash
-        run: |-
-          npm run build
 
       - name: Lint
         shell: bash
         run: |-
           npm run lint
 
+      - name: Build + Package
+        shell: bash
+        run: |-
+          npm run build:build
+
       - name: Test
         shell: bash
         run: |-
           npm run test
 
-      - name: Package
-        shell: bash
-        run: |-
-          npm run package
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - uses: ./
+        with:
+          stack_name: a
+          write_format: none
