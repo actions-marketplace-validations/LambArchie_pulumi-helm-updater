@@ -66,6 +66,11 @@ jobs:
         run: |-
           echo "PULUMI_CONFIG_PASSPHRASE=" >> $GITHUB_ENV
 
+      - name: Check file was not accidently updated
+        shell: bash
+        run: |-
+          echo "e58354c4cd4d0d1702fe5c7437e9fd2cfefe634068c67dc3d18a3df2478878c7 example/helmVersions.ts" | sha256sum --check --status || exit 1
+
       - name: Run Pulumi Helm Updater
         uses: ./
         with:
