@@ -6,8 +6,8 @@
   "scripts": {
     "build": "tsc",
     "lint": "eslint --ext ts .",
-    "lint:fix": "eslint --fix --ext ts src/",
-    "package": "ncc build --target es2021",
+    "lint:fix": "eslint --fix --ext ts .",
+    "package": "ncc build --target es2021 --license licenses.txt",
     "package:build": "npm run build && npm run package",
     "test": "jest"
   },
