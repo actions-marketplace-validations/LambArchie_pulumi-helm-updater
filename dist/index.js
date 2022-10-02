@@ -93,7 +93,7 @@ const checkHelmUpdates = async (currentHelmRelease) => {
         if (axios_1.default.isAxiosError(err)) {
             core.error(`Failed to download the helm repo index from ${currentHelmRelease.repo} for ${currentHelmRelease.chart}`);
             if (err.response) {
-                core.error('Server responded in non 2xx range');
+                core.error(`Server responded in non 2xx range on request to ${chartUrl}`);
             }
             core.debug(err.request);
             core.debug(err.message);
@@ -244,8 +244,8 @@ const getStack = (stackName, stackFile) => {
             process.exit();
         }
         if (commandOutput.stderr) {
-            core.warning('The following warning occured on the stack export');
-            core.warning(commandOutput.stderr);
+            core.warning(`The following warning occured on the stack export
+${commandOutput.stderr}`);
         }
         output = commandOutput.stdout;
     }
