@@ -63,7 +63,7 @@ export const parseStack = (pulumiStack: PulumiStackPreview | PulumiStackExport) 
 
   if ('deployment' in pulumiStack) {
     // Stack Export
-    if (pulumiStack.version !== '3') {
+    if (pulumiStack.version !== 3) {
       core.setFailed('Unrecognised Pulumi Stack Version')
       process.exit()
     }

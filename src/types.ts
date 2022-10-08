@@ -49,5 +49,5 @@ export interface PulumiStackExport {
   deployment: {
     resources: PulumiResource[]
   }
-  version: string
+  version: number
 }
