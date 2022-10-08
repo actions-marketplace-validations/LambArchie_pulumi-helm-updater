@@ -5,6 +5,13 @@ inputs:
   stack_file:
     required: false
     description: 'Pulumi Stack export file to check. Require this or stack_name to be set'
+  stack_file_format:
+    required: false
+    description: |
+      What format the input stack file is. Only utilised if stack_file is set
+        'export'  - If used 'pulumi stack export'
+        'preview' - If used 'pulumi preview --show-sames --json'
+    default: 'export'
   stack_name:
     required: false
     description: 'Pulumi Stack to Check. Require this or stack_path to be set'

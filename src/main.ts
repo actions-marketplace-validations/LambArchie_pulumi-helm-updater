@@ -7,6 +7,7 @@ const run = async () => {
   try {
     const stackName = core.getInput('stack_name', { required: false })
     const stackFile = core.getInput('stack_file', { required: false })
+
     if (stackName && stackFile) {
       core.setFailed('Both stack_name and stack_file were set, quitting')
       process.exit()

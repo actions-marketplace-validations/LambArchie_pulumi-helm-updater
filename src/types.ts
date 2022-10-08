@@ -23,20 +23,31 @@ export interface HelmRepoIndex {
   generated: string
 }
 
-export interface PulumiStack {
-  deployment: {
-    resources: {
-      outputs: {
-        repositoryOpts: {
-          repo: string
-        }
-        status: {
-          chart: string
-          version: string
-        }
-      }
-      type: string
-      urn: string
-    }[]
+export interface PulumiResource {
+  outputs: {
+    repositoryOpts: {
+      repo: string
+    }
+    status: {
+      chart: string
+      version: string
+    }
   }
+  type: string
+  urn: string
+}
+
+export interface PulumiStackPreview {
+  steps: {
+    op: 'delete' | 'same' | 'update'
+    oldState: PulumiResource
+    newState: PulumiResource
+  }[]
+}
+
+export interface PulumiStackExport {
+  deployment: {
+    resources: PulumiResource[]
+  }
+  version: number
 }

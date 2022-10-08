@@ -24,11 +24,17 @@ Currently this only supports [helm.v3.Release](https://www.pulumi.com/registry/p
     # Recommend doing this way if your stack requires configuration before accessing
     stack_file: export.json
 
+    # What format the input stack file is
+    # Only utilised if stack_file is set
+    #   'export'  - If used 'pulumi stack export'
+    #   'preview' - If used 'pulumi preview --show-sames --json'
+    stack_file_type: export
+
     # What if any output to disk should occur
-    #  'none' - Disable writing to disk (default)
-    #  'js'   - Output in a format JavaScript can understand
-    #           Format is 'export const releaseVersion = '1.2.3'
-    #           Example can be seen in example/helmVersions.ts
+    #   'none' - Disable writing to disk (default)
+    #   'js'   - Output in a format JavaScript can understand
+    #            Format is 'export const releaseVersion = '1.2.3'
+    #            Example can be seen in example/helmVersions.ts
     # Custom formats can be done via the action output
     # Default: none
     write_format: js
@@ -75,6 +81,18 @@ Reason latestVersion isn't missing is because I felt it was better for latestVer
   with:
     # Set to the file contain the output of 'pulumi stack export'
     stack_file: export.json
+
+    stack_file_type: export
+```
+
+### Use preview output
+
+```yaml
+- uses: LambArchie/pulumi-helm-updater@v1
+  with:
+    # Set to the file contain the output of 'pulumi preview --show-sames --json'
+    stack_file: preview.json
+    stack_file_type: preview
 ```
 
 ### Advanced Output

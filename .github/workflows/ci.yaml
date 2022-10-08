@@ -56,26 +56,64 @@ jobs:
 
   test:
     runs-on: ubuntu-latest
+    env:
+      PULUMI_CONFIG_PASSPHRASE: ''
     steps:
       - name: Checkout
         uses: actions/checkout@v3
 
-      - name: Set pulumi config passphrase
+      - name: Setup Node 16
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16
+          cache: 'npm'
+          cache-dependency-path: example/package-lock.json
+
+      - name: Create test files
         working-directory: example
         shell: bash
         run: |-
-          echo "PULUMI_CONFIG_PASSPHRASE=" >> $GITHUB_ENV
+          pulumi stack export --stack dev > export.json
+          npm ci
+          pulumi preview --stack dev --show-sames --json > preview.json
 
       - name: Check file was not accidently updated
         shell: bash
         run: |-
           echo "e58354c4cd4d0d1702fe5c7437e9fd2cfefe634068c67dc3d18a3df2478878c7 example/helmVersions.ts" | sha256sum --check --status || exit 1
 
-      - name: Run Pulumi Helm Updater
+      - name: Run with stack name + location
         uses: ./
         with:
           stack_name: dev
           stack_location: example/
+          write_format: js
+          write_location: example/helmVersions.ts
+
+      - name: Check file was updated correctly
+        shell: bash
+        run: |-
+          echo "9e93bb7b61bb400ce30e7be841cefda39862f88e20873e1ca82048c751bba015 example/helmVersions.ts" | sha256sum --check --status || exit 1
+          git checkout -- example/helmVersions.ts
+
+      - name: Run with stack file (export)
+        uses: ./
+        with:
+          stack_file: example/export.json
+          write_format: js
+          write_location: example/helmVersions.ts
+
+      - name: Check file was updated correctly
+        shell: bash
+        run: |-
+          echo "9e93bb7b61bb400ce30e7be841cefda39862f88e20873e1ca82048c751bba015 example/helmVersions.ts" | sha256sum --check --status || exit 1
+          git checkout -- example/helmVersions.ts
+
+      - name: Run with stack file (preview)
+        uses: ./
+        with:
+          stack_file: example/preview.json
+          stack_file_format: preview
           write_format: js
           write_location: example/helmVersions.ts
 

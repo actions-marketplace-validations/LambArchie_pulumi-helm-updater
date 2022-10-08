@@ -232,6 +232,7 @@ const child_process_1 = __nccwpck_require__(2081);
 const fs_1 = __nccwpck_require__(7147);
 const core = __importStar(__nccwpck_require__(2186));
 const getStack = (stackName, stackFile) => {
+    const stackFileFormat = core.getInput('stack_file_format', { required: false });
     let output;
     if (stackName) {
         const stackLocation = core.getInput('stack_location', { required: false });
@@ -250,6 +251,7 @@ ${commandOutput.stderr}`);
         output = commandOutput.stdout;
     }
     else {
+        core.debug(`Using stack format ${stackFileFormat}`);
         if (!(0, fs_1.existsSync)(stackFile)) {
             core.setFailed(`Failed to read from file ${stackFile}, therefore quitting as cannot read pulumi stack export`);
             process.exit();
@@ -259,9 +261,15 @@ ${commandOutput.stderr}`);
     try {
         const stack = JSON.parse(output);
         if (stackFile) {
-            return {
-                deployment: stack.checkpoint.latest,
-            };
+            switch (stackFileFormat) {
+                case 'export':
+                    return stack;
+                case 'preview':
+                    return stack;
+                default:
+                    core.setFailed(`Stack Format ${stackFileFormat} isn't recongised`);
+                    process.exit();
+            }
         }
         return stack;
     }
@@ -276,7 +284,24 @@ ${commandOutput.stderr}`);
 exports.getStack = getStack;
 const parseStack = (pulumiStack) => {
     const helmReleases = [];
-    pulumiStack.deployment.resources.forEach((resource) => {
+    let resources;
+    if ('deployment' in pulumiStack) {
+        // Stack Export
+        if (pulumiStack.version !== 3) {
+            core.setFailed('Unrecognised Pulumi Stack Version');
+            process.exit();
+        }
+        resources = pulumiStack.deployment.resources;
+    }
+    else if ('steps' in pulumiStack) {
+        // Preview
+        resources = pulumiStack.steps.map(step => step.newState);
+    }
+    else {
+        core.setFailed('Unrecognised Stack Format Type');
+        process.exit();
+    }
+    resources.forEach((resource) => {
         // Currently don't support kubernetes:helm.sh/v3:Chart as couldn't find a repliable way
         // to get the current version
         if (resource.type === 'kubernetes:helm.sh/v3:Release') {
