@@ -65,6 +65,7 @@ jobs:
         shell: bash
         run: |-
           echo "PULUMI_CONFIG_PASSPHRASE=" >> $GITHUB_ENV
+          export PULUMI_CONFIG_PASSPHRASE=""
           pulumi stack export --stack dev > export.json
           pulumi preview --show-sames -j > preview.json
 
