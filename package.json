@@ -31,7 +31,7 @@
     "@actions/core": "1.10.0",
     "axios": "0.27.2",
     "js-yaml": "4.1.0",
-    "semver": "7.3.7"
+    "semver": "7.3.8"
   },
   "devDependencies": {
     "@tsconfig/node16": "^1.0.3",
