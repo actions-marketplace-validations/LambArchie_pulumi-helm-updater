@@ -1,4 +1,4 @@
-name: Check dist directory
+name: Check dist
 
 on:
   push:
@@ -10,7 +10,7 @@ permissions:
   contents: read
 
 jobs:
-  build:
+  dist-check:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
